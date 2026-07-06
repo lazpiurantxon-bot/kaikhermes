@@ -19,6 +19,7 @@ Diseño completo del sistema multiagente (evolución clean-room del enfoque Herm
 | [`06-gobernanza-costes-rollback.md`](06-gobernanza-costes-rollback.md) | Riesgos R0–R3, aprobaciones por Telegram, ledger, circuit breakers, auditoría |
 | [`07-aplicaciones-personalizadas.md`](07-aplicaciones-personalizadas.md) | 5 aplicaciones end-to-end: EZTI ×2, Hermes/Mandi, Música, Hotel |
 | [`08-roadmap-riesgos-decisiones.md`](08-roadmap-riesgos-decisiones.md) | Roadmap F0–F3, riesgos, **decisiones tomadas por ti**, **preguntas abiertas** |
+| [`09-arquitectura-hermes.md`](09-arquitectura-hermes.md) | **VIGENTE (ADR-003):** la oficina sobre Hermes Agent de Nous Research — prevalece sobre 01/04/05 donde entren en conflicto |
 
 ## Reglas permanentes de este diseño
 

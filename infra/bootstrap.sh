@@ -26,18 +26,25 @@ install -d -o mandi -g mandi -m 750 \
   /srv/mandi /srv/mandi/state /srv/mandi/state/backups \
   /srv/mandi/services /srv/mandi/deploys
 
-echo "== [5/6] Cron de mandi (watchdog 5 min, ledger check diario) =="
-crontab -u mandi - <<'CRON'
-*/5 * * * * cd /srv/mandi/services && /usr/bin/python3 watchdog/watchdog.py >> /srv/mandi/state/watchdog.log 2>&1
-15 8 * * *  cd /srv/mandi/services && /usr/bin/python3 ledger/ledger.py check >> /srv/mandi/state/ledger.log 2>&1
-CRON
+echo "== [5/6] Workspace de la oficina =="
+install -d -o mandi -g mandi -m 750 /srv/mandi/office
 
-echo "== [6/6] Siguientes pasos manuales =="
+echo "== [6/6] Siguientes pasos manuales (ADR-003: sustrato Hermes Agent) =="
 cat <<'EOF'
-1. Clonar el repo de gobierno como usuario mandi y copiar services/ a /srv/mandi/services/
-2. Crear /srv/mandi/services/gateway-telegram/.env desde .env.example (chmod 600, chown mandi)
-3. Ejecutar la prueba del kill switch: python3 services/tests/test_kill_switch.py
-4. Arrancar: cd /srv/mandi/services && docker compose -f docker-compose.yml up -d
-5. Verificar: enviar ESTADO al bot por Telegram
+Como usuario mandi:
+1. Instalar Hermes Agent limpio (release estable actual):
+     curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+   PROHIBIDO: copiar config/memoria/skills del Hermes antiguo o usar 'hermes claw migrate' (clean-room, ADR-003).
+2. hermes setup  → asistente completo
+3. hermes model  → backends por orden: OpenAI Codex OAuth (rutina),
+   Anthropic OAuth (nivel 3; verificar si el plan Pro basta), Vertex AI
+   con service account (bulk, créditos GCP)
+4. Gateway Telegram con el bot @Tartaloagentbot (token REGENERADO en
+   BotFather justo antes): hermes gateway  → pairing DM con el propietario
+   + probar rechazo de cuenta ajena
+5. Clonar el repo de gobierno en /srv/mandi/office/ y cargar skills
+   semilla y playbooks (operating-model/09 §9)
+6. Completar el plan de validación (operating-model/09 §8) y registrar
+   resultados en el issue #5
 EOF
 echo "bootstrap completado."

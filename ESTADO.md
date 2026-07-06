@@ -1,24 +1,28 @@
-# ESTADO — 2026-07-06 (actualización 2)
+# ESTADO — 2026-07-06 (actualización 3 — PIVOTE A HERMES)
 
-**Fase:** F0 (Fundación) en curso · **Pausa:** no · **Gasto real del mes:** 0 €
+**Fase:** F0 replanteada por ADR-003 · **Pausa:** no · **Gasto real del mes:** 0 €
+
+## Decisión del día (ADR-003)
+
+**El sustrato de la oficina es Hermes Agent de Nous Research**, no servicios propios. Corrección doble del propietario aceptada y verificada: (1) el sistema debe basarse en el software Hermes Agent; (2) Hermes SÍ acepta suscripciones como backend (Anthropic OAuth — doc cita Max, verificar Pro—, OpenAI Codex OAuth, Vertex AI con service account). Arquitectura completa en `operating-model/09-arquitectura-hermes.md`.
 
 ## Hecho hoy
 
-- Parche correctivo pre-F0 (ADR-002) + ADR-001; estructura completa del repo de gobierno.
-- Servicios deterministas escritos y verificados en CI local; **test del kill switch en verde**.
-- `infra/`: bootstrap, compose y runbook de VM con las 5 precondiciones.
-- **Bot de Telegram creado por el propietario: @Tartaloagentbot** ([#3](https://github.com/lazpiurantxon-bot/kaikhermes/issues/3)). Token recibido (NO almacenado en el repo). Verificación `getMe` **bloqueada desde la sesión**: la política de red del entorno deniega `api.telegram.org` — se verifica al desplegar en la VM, o antes si el propietario permite el dominio en el entorno o verifica en local.
-- **EZTI Sprint 1 avanzado** ([#1](https://github.com/lazpiurantxon-bot/kaikhermes/issues/1)): 14 candidatos (v0.2), **6 priorizados** para primera oleada (Pouch Alliance, Sport Foods Labs, Monopacker, Allpack-Stick, Envasados a Terceros, MillMax); dossier de compliance ampliado con **hallazgo nuevo**: restricción de monodosis de plástico en HORECA (ago-2026, impacto probable bajo para EZTI) y obligación RAP de envases RD 1055/2022 (**confirmar inscripción de EZTI**).
+- ADR-003 + doc 09 (arquitectura de la oficina Hermes: topología, memoria en dos niveles, gobernanza R0–R3 sobre mecanismos nativos, política de backends, clean-room aplicado a Hermes, plan de validación §8, F0 revisado §9).
+- `services/` Python **retirados** → `archive/pre-hermes-services/` (no se despliegan; solo referencia).
+- `infra/bootstrap.sh` y `runbook-vm.md` reescritos para instalación limpia de Hermes.
+- Se conserva todo lo portable: gobernanza, roster de roles, playbooks, pipeline, investigación EZTI completa, precondiciones de VM.
 
 ## Esperando al propietario
 
 | Qué | Issue | Detalle |
 |---|---|---|
-| Precondiciones de VM | [#2](https://github.com/lazpiurantxon-bot/kaikhermes/issues/2) | Snapshot probado, inventario, coste — requiere GCP |
-| Chat ID + vía de verificación del bot | [#3](https://github.com/lazpiurantxon-bot/kaikhermes/issues/3) | Enviar un mensaje a @Tartaloagentbot; decidir opción (a) dominio permitido, (b) verificación local, (c) al deploy. Recomendado: regenerar token en el deploy |
-| Verificaciones V1–V3 | [#4](https://github.com/lazpiurantxon-bot/kaikhermes/issues/4) | ultracode, límites Fable 5, Vertex, Routines |
-| **GO a la shortlist de 6** | [#1](https://github.com/lazpiurantxon-bot/kaikhermes/issues/1) | Con tu GO: verifico emails, personalizo los 6 borradores y te los entrego listos para enviar (envío = tuyo, R3) |
+| Precondiciones de VM | [#2](https://github.com/lazpiurantxon-bot/kaikhermes/issues/2) | Sin cambios: snapshot probado, inventario, coste — requiere GCP (Paso 0 de Cloud Shell pendiente) |
+| Instalación Hermes | [#5](https://github.com/lazpiurantxon-bot/kaikhermes/issues/5) | Depende de #2; incluye plan de validación §8 |
+| Bot / gateway | [#3](https://github.com/lazpiurantxon-bot/kaikhermes/issues/3) | @Tartaloagentbot pasa a ser el canal del gateway nativo de Hermes; regenerar token en deploy |
+| Verificaciones | [#4](https://github.com/lazpiurantxon-bot/kaikhermes/issues/4) | Actualizadas: V4 (Anthropic OAuth con Pro) y V5 (control de gasto nativo de Hermes) |
+| **GO a shortlist EZTI de 6** | [#1](https://github.com/lazpiurantxon-bot/kaikhermes/issues/1) | Independiente del pivote — puede avanzar YA |
 
-## Próximo (sin dependencias)
+## Nota
 
-Verificación de fichas/emails de los 6 priorizados y personalización de borradores (queda listo para tu gate en cuanto confirmes la lista).
+El Sprint 1 de EZTI no depende del sustrato: la investigación está en el repo y la retomará el JdG-Hermes al arrancar (doc 09 §9.7). Tu GO a la shortlist sigue siendo lo único que bloquea los borradores personalizados.

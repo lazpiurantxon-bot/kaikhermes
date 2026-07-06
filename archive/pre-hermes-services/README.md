@@ -1,3 +1,7 @@
+# [ARCHIVADO — ADR-003] Servicios deterministas pre-Hermes
+
+> **Estos servicios NO se despliegan.** Sustituidos por las piezas nativas de Hermes Agent (gateway, cron, memoria) por decisión del propietario (ADR-003, 2026-07-06). Se conservan como referencia y rollback. El test del kill switch cumplió en su día la precondición 5 de ADR-002.
+
 # Servicios deterministas (capa 24/7, SIN LLM)
 
 Tres piezas, todas stdlib de Python 3 (cero dependencias externas — auditables línea a línea):

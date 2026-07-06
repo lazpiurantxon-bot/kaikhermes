@@ -31,7 +31,7 @@ gcloud compute instances create mandi-core \
 sudo bash infra/bootstrap.sh   # idempotente; <30 min hasta operativo
 ```
 
-Después: pasos manuales que imprime el propio bootstrap (clonar repo, `.env` del gateway con permisos 600, test del kill switch, `docker compose up -d`, verificar con `ESTADO` por Telegram).
+Después: pasos manuales que imprime el propio bootstrap — instalación limpia de **Hermes Agent** (ADR-003), `hermes setup`, backends por suscripción, gateway Telegram con pairing, carga de skills semilla y **plan de validación** de `operating-model/09-arquitectura-hermes.md` §8.
 
 ## 3. Rollback
 
@@ -44,7 +44,4 @@ Después: pasos manuales que imprime el propio bootstrap (clonar repo, `.env` de
 
 ## 4. Verificación post-instalación
 
-1. `ESTADO` por Telegram responde.
-2. `PARA TODO` pausa y `REANUDA` rearma (probar una vez en real, además del test).
-3. `watchdog.py --force-backup` crea copia en `state/backups/`.
-4. `ledger.py informe` imprime el mes vacío sin error.
+La define el plan de validación de `operating-model/09-arquitectura-hermes.md` §8 (auth por suscripción, pairing DM + rechazo de terceros, command approval, kill switch del daemon, gobernanza de skills, cron, aislamiento de subagentes, visibilidad de gasto, sandbox Docker). Cada punto se registra con fecha en el issue #5. `hermes doctor` como diagnóstico general.
