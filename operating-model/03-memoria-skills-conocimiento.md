@@ -53,7 +53,8 @@ knowledge/
 ├── ezti/
 │   ├── producto.md           # receta, formatos, claims permitidos
 │   ├── proveedores.md        # copackers: MOQ, costes, estado de contacto
-│   ├── normativa.md          # 1169/2011, 1924/2006, RGSEAA, TicketBAI (+flags de verificación)
+│   ├── normativa-alimentaria.md  # 1169/2011, 1924/2006, RGSEAA (+flags de verificación)
+│   ├── fiscal-facturacion.md # TicketBAI/facturación — módulo de operación comercial, posterior
 │   ├── mercado.md            # competidores, precios, posicionamiento
 │   └── ayudas.md             # subvenciones con plazos (TTL corto)
 ├── core/                     # decisiones técnicas del propio sistema

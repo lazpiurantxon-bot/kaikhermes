@@ -14,7 +14,7 @@
 
 ## 2. Segunda ola (F1, semanas 3–6)
 
-- **Gmail API** con scopes `gmail.readonly` + `gmail.compose`: el sistema lee correo relevante (filtrado por etiquetas que tú definas) y **crea borradores**; el scope de envío no se concede, así el gate C (no contactar terceros) está garantizado por OAuth, no por promesa. Enviar siempre lo haces tú con un clic.
+- **Gmail API — solo lectura** (`gmail.readonly`): el sistema lee correo relevante (filtrado por etiquetas que tú definas). **Corrección registrada (parche pre-F0):** `gmail.compose` NO hace al sistema incapaz de enviar — según la documentación de Google, ese scope permite gestionar borradores **y enviar correo** —, así que no se concede ninguno de `gmail.compose`/`gmail.modify`/`gmail.send`. Los borradores se generan como **Markdown/EML en el repo o en la cola interna** y los envías tú. Si más adelante quieres borradores reales en Gmail, se implementará un **mediador mínimo** (servicio determinista propio que expone al agente únicamente "crear borrador", sin endpoints de envío, con tests de bloqueo), documentado como control de software propio — no se venderá como garantía OAuth pura.
 - **Google Calendar** (lectura/escritura de tu calendario): riesgo bajo, útil para planificación y para el resumen diario. Conector disponible verificado en este entorno.
 - **Cloudflare API token scoped** para automatizar deploys de Pages desde CI.
 - **healthchecks / GCP Monitoring** para alertas de uptime hacia Telegram.
@@ -53,7 +53,7 @@ Reglas operativas: el nivel lo fija el **tipo de tarea, no el agente** (un mismo
 
 ### Recomendación explícita: Fable 5 + "ultracode"
 
-1. **Fable 5: sí, como cerebro de decisión, no como obrero universal.** Es el modelo correcto para orquestación compleja, arquitectura, revisión y todo lo irreversible. Usarlo para formatear tablas o mover archivos sería quemar la divisa más escasa del sistema. La política de arriba lo implementa.
+1. **Fable 5: sí, como cerebro de decisión, no como obrero universal.** Es el modelo correcto para orquestación compleja, arquitectura, revisión y todo lo irreversible. Usarlo para formatear tablas o mover archivos sería quemar la divisa más escasa del sistema. La política de arriba lo implementa. **No se asume disponibilidad sostenida de Fable 5 bajo Pro:** cada uso de nivel 3 se trata como recurso escaso y contabilizado en el ledger; si no hay ventana disponible, el trabajo crítico se pausa y se reanuda — nunca se degrada en silencio.
 2. **"ultracode": excluido del diseño hasta verificación.** No me consta como producto o modo verificable de Anthropic, y tú mismo lo has marcado como no confirmado. Ninguna pieza crítica depende de él. Si resulta corresponder a una capacidad real (p. ej. un nivel superior de razonamiento/cómputo bajo tu plan), su hueco natural ya está reservado: se enchufaría como "nivel 3+" para picos puntuales — decisiones de arquitectura fundacionales y revisiones de release — nunca como modo por defecto. Tarea V1 del roadmap: identificar qué es exactamente, sus límites y su forma de acceso, y solo entonces decidir.
 3. **Riesgo señalado sin suavizar:** con Claude Pro, la capacidad de nivel 3 puede quedarse corta cuando la oficina esté a pleno rendimiento (F2). No lo resuelvas hoy: el ledger medirá cuántas veces al mes chocas con límites y cuánto trabajo se pausa. Con esos datos, la decisión de subir a un plan superior (o añadir presupuesto API para picos) se toma en la revisión de F2 sobre números reales. Decidirlo hoy sería inventar.
 

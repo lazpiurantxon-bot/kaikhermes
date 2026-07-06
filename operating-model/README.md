@@ -22,6 +22,6 @@ Diseño completo del sistema multiagente (evolución clean-room del enfoque Herm
 
 ## Reglas permanentes de este diseño
 
-1. **Clean-room:** nada del sistema anterior entra sin autorización escrita ítem a ítem (verificado: este repo estaba vacío al iniciar — el primer commit es un root commit).
+1. **Clean-room:** nada del sistema anterior entra sin autorización escrita ítem a ítem. La garantía cubre artefactos y proceso (repo verificable por root commit + proceso declarado de no-lectura), no el conocimiento previo que personas o modelos conserven.
 2. **Acta:** `fase-1-respuestas.md` es el contrato de restricciones; se enmienda con fecha, no se edita en silencio.
 3. **Gates:** ninguna acción R2+ (público, terceros, producción real, gasto nuevo) sin aprobación humana registrada.

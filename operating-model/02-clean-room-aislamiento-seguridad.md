@@ -4,6 +4,8 @@
 
 Hecho verificable, no promesa: el primer commit de esta fase en `kaikhermes` fue un **root commit** (branch `claude/multiagent-operating-model-fli2vq`), lo que demuestra que el repo estaba vacío. No se ha leído, listado ni importado ningún artefacto del sistema anterior.
 
+**Alcance preciso de la garantía clean-room:** (1) *repo clean-room verificable* por root commit — sí; (2) *proceso clean-room declarado* — sí: en esta fase no se han inspeccionado ni importado artefactos previos; (3) lo que **no** se afirma: garantía absoluta sobre el conocimiento previo que personas o modelos conserven de iteraciones pasadas. El control cubre artefactos e importaciones — que es lo auditable —, no memorias humanas.
+
 **Regla permanente de importación:** ningún archivo, prompt, memoria, skill, credencial o configuración del sistema anterior entra en el nuevo sin autorización escrita tuya **ítem a ítem** (un mensaje que diga exactamente qué artefacto y para qué). El artefacto importado se revisa antes de integrarse y queda registrado en `decisions/` con fecha y motivo. Por defecto: nada.
 
 ## 2. Recomendación de repositorio (H24 — decidido con datos, no por inercia)
@@ -17,6 +19,14 @@ Hecho verificable, no promesa: el primer commit de esta fase en `kaikhermes` fue
 ## 3. Infraestructura: repave, no reutilización
 
 La VM existente tiene instalaciones previas de Hermes declaradas como no fiables. Reutilizarla violaría el clean-room y heredaría configuración desconocida.
+
+**Precondiciones obligatorias antes de tocar cualquier VM (la antigua o la creación de la nueva)** — sin las cinco marcas no se ejecuta nada contra GCP:
+
+- [ ] Snapshot de la VM antigua creado **y probado** (restauración verificada en una instancia temporal; "snapshot hecho" no basta).
+- [ ] Inventario mínimo de la VM antigua: qué servicios/crons/procesos corren — solo metadatos para no perder nada operativo, sin inspeccionar contenido (clean-room).
+- [ ] Coste mensual estimado de la configuración nueva y delta contra créditos disponibles.
+- [ ] Rollback documentado en `infra/runbook-vm.md`.
+- [ ] Kill switch probado (en local/CI si la VM nueva aún no existe).
 
 1. **VM nueva** en GCP (e2-small basta para F0–F1; con créditos, coste real ≈ 0). Se crea desde `infra/bootstrap.sh` **versionado en este repo**: usuario no-root, Docker, systemd units del gateway/ledger/watchdog, ufw con denegación por defecto, actualizaciones automáticas de seguridad. La VM debe poder recrearse desde cero en <30 min — esa es la definición de "infraestructura limpia".
 2. **VM antigua: cuarentena.** Snapshot de disco → parar todos los servicios/autostart → mantener 30 días apagada como archivo de solo lectura → borrar tras tu aprobación explícita. **Nunca** se montan sus volúmenes en la VM nueva. Si algún dato antiguo resulta necesario, se aplica la regla de importación ítem a ítem.
@@ -64,7 +74,7 @@ Sesiones de agentes (Claude Code):
 | Telegram bot token | Solo el bot | Solo `gateway-telegram` |
 | Cloudflare API token | Scoped a zona `ezti.net`, solo Pages/DNS necesarios | Solo el paso de deploy |
 | GCP service account | Rol mínimo (escribir en bucket de backups; nada más) | Solo watchdog |
-| Gmail OAuth (F1) | Scopes `gmail.readonly` + `gmail.compose` — **técnicamente incapaz de enviar** | Solo el flujo de borradores |
+| Gmail OAuth (F1, opcional) | Solo `gmail.readonly`. **Nunca** `gmail.compose`, `gmail.modify` ni `gmail.send` (todos permiten enviar o mutar correo). Los borradores se generan como Markdown/EML en el repo o la cola interna | Solo el flujo de lectura |
 
 Almacenamiento: en la VM, archivos de entorno por servicio con permisos 600 propiedad del servicio (systemd `EnvironmentFile`), o GCP Secret Manager si crece el número. Rotación al menor indicio de fuga; todos los tokens deben poder revocarse individualmente sin tumbar el resto.
 

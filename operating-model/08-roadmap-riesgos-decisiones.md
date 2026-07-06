@@ -7,7 +7,7 @@
 Infraestructura mínima + primer resultado de negocio en paralelo, no en serie:
 
 1. Estructura del repo de gobierno: `domains/`, `knowledge/`, `decisions/`, `playbooks/`, `skills/`, `infra/`, `ESTADO.md`; playbooks de dominio (EZTI, core, música, hotel) con sus límites legales embebidos.
-2. VM nueva desde `infra/bootstrap.sh`; VM antigua a cuarentena (snapshot + stop). 
+2. VM nueva desde `infra/bootstrap.sh`; VM antigua a cuarentena (snapshot + stop) — **solo tras cumplir las 5 precondiciones** del doc 02 §3: snapshot probado, inventario mínimo, coste mensual estimado, rollback documentado, kill switch probado.
 3. `gateway-telegram` v1: intake, cola de aprobaciones (`APRUEBO/RECHAZO/PREGUNTA`), alertas, kill switch (`PARA TODO`) — probado.
 4. Ledger v1 (SQLite): gasto real + eventos de rate-limit; circuit breakers básicos.
 5. Convenciones del tablero en GitHub Issues + resumen diario.
@@ -51,7 +51,7 @@ Plantilla de "nuevo dominio" ejercitada (hogar o deportes como prueba de H23); o
 6. **Capa 24/7 sin LLM** (gateway, ledger, watchdog) — el routing más rentable es no usar modelo donde no hace falta juicio.
 7. **GitHub Issues como tablero** en vez de construir un board propio o adoptar Notion/n8n.
 8. **Memoria = markdown versionado con gobernanza de PR**; sin vector DB, sin memoria opaca, sin autoaprendizaje sin merge humano.
-9. **Gmail limitado por scopes OAuth incapaces de enviar** (readonly + compose): el gate de "no contactar terceros" es técnico, no una promesa.
+9. **Gmail solo lectura (`gmail.readonly`), sin `compose`/`modify`/`send`** — corregido en el parche pre-F0: `gmail.compose` permite gestionar borradores y también enviar, así que no se concede. Borradores como Markdown/EML en repo/cola interna; un futuro mediador mínimo sin endpoints de envío será control de software propio con tests de bloqueo, no garantía OAuth pura.
 10. **Niveles de riesgo R0–R3 + lista de prohibidos por defecto**, mapeando exactamente tu B4/E15, con circuit breakers deterministas y kill switch.
 11. **Ledger de dos divisas** (€ reales y capacidad de suscripción) como base para decidir upgrade de plan en F2 con datos.
 12. **Routing de modelos por tipo de tarea**: determinista → Haiku → Sonnet → Fable 5; ante duda se sube de nivel; nunca degradación silenciosa en trabajo crítico.
