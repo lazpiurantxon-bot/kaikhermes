@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# bootstrap.sh — VM nueva de Mandi desde cero. Idempotente. Ubuntu 24.04.
-# NO ejecutar contra GCP hasta cumplir las 5 precondiciones de ADR-002
-# (ver infra/runbook-vm.md). La VM debe poder recrearse en <30 min con este script.
+# bootstrap.sh — hardening objetivo F1 (usuario de servicio dedicado, firewall,
+# unattended-upgrades). Para el arranque F0 real ver infra/quickstart-f0.md
+# (Hermes como usuario de login, ufw diferido). Idempotente. Ubuntu 24.04.
+# La VM debe poder recrearse en <30 min con este script + el quickstart.
 set -euo pipefail
 
 echo "== [1/6] Paquetes base =="
