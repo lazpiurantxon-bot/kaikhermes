@@ -24,3 +24,7 @@ Además, el propietario corrigió una afirmación errónea del diseño: **sí es
 - El bot @Tartaloagentbot se reutiliza como canal del gateway de Hermes (es un bot nuevo, no del sistema anterior — no viola clean-room).
 - Se abre un **plan de validación de instalación** (doc 09 §8): lo documentado por Hermes se trata como "por verificar en tu instalación" hasta probarlo — en particular OAuth de Anthropic con plan Pro, granularidad del command approval y gobernanza de skills auto-creadas.
 - Los errores corregidos del diseño quedan registrados: (a) malinterpretar "basado en Hermes"; (b) afirmar que las suscripciones no podían alimentar Hermes.
+
+## Addendum 2026-07-06 — el sistema anterior es OpenClaw
+
+El inventario GCP (`knowledge/core/infra-gcp-inventario.md`) confirma que el sistema previo era **OpenClaw** (instancia `openclaw-core`, TERMINATED). Refuerza el clean-room: `hermes claw migrate` (migración desde OpenClaw) queda **prohibido**; el disco de `openclaw-core` no se monta ni se importa. Donde este ADR y el doc 02 dicen "Hermes antiguo", léase "sistema anterior = OpenClaw". Queda por determinar qué corre en `kaikuv1` (RUNNING) antes de decidir repave vs VM nueva.
