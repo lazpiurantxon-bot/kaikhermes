@@ -32,8 +32,16 @@
 - `openclaw-core` (50 GB): ~6 €/mes con la VM parada.
 - Total sangrado ~34 €/mes sobre un presupuesto de 100–300 €/mes → material.
 
-## Decisiones pendientes
+## Decisiones tomadas (2026-07-06)
 
-1. Qué es `kaikuv1` (inventario de metadatos) → determina repave vs VM nueva para Hermes.
-2. Destino de `comfy-models` (mantener como activo audiovisual / borrar).
-3. Snapshot + borrado diferido de `openclaw-core` (cuarentena del sistema anterior).
+1. **VM de Hermes: NUEVA y dedicada** (`hermes-core`, e2-small, europe-southwest1-a). No se repavimenta ni se toca `kaikuv1`.
+2. **`kaikuv1`: se deja intacto.** El `describe` no reveló workload (solo Ops Agent, osconfig, claves SSH; service account por defecto con scopes básicos; tag `acceso-ssh`; claves SSH expiradas el 2026-06-30). Sigue RUNNING (~49 €/mes). **Sin clasificar** — pendiente que el propietario aclare para qué es (posible ahorro futuro o servicio necesario). No bloquea nada.
+3. **`comfy-models`: BORRAR** (autorizado; experimento). Ahorro ~28 €/mes.
+4. **`openclaw-core`: dejar de momento** (sin snapshot ni borrado por ahora, por decisión del propietario). Sigue en TERMINATED; disco ~6 €/mes.
+
+## VM nueva de Hermes — especificación
+
+- Nombre: `hermes-core` · Tipo: **e2-small** (2 vCPU compartida, 2 GB) · Zona: europe-southwest1-a (Madrid).
+- Disco: 30 GB pd-balanced, Ubuntu 24.04 LTS.
+- Coste estimado: ~13–16 €/mes on-demand + ~1 €/mes disco → **cubierto por créditos GCP** (coste real ≈ 0).
+- **Ruta de upgrade:** si el daemon + Docker + subagentes agotan la RAM, subir a e2-medium (4 GB, ~24 €/mes) es un `stop` + cambio de tipo + `start`, sin reinstalar.
