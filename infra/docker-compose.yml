@@ -1,0 +1,9 @@
+# Capa 24/7 determinista de Mandi. Copiar junto a services/ en /srv/mandi/services/.
+services:
+  gateway-telegram:
+    build: ./gateway-telegram
+    env_file: ./gateway-telegram/.env
+    volumes:
+      - /srv/mandi/state:/srv/mandi/state
+    restart: unless-stopped
+    # sin puertos expuestos: long-polling saliente, nada escucha
