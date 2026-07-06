@@ -42,6 +42,11 @@ Un gel de miel, limón y sal es, en principio, un **alimento** (preparación ali
 
 No hay un reglamento único: la fecha de duración mínima la fija el operador **con base justificable** (estudios de estabilidad, aw/pH — la miel es poco propensa pero el limón cambia pH y el formato sachet importa). Los copackers serios lo ofrecen como servicio: está en los criterios de cualificación de `proveedores.md`. ⚑ Exigir informe de estabilidad como entregable del copacker elegido.
 
+## 6. Envases ⚑ NUEVO (detectado 2026-07-06, segunda pasada)
+
+- **Restricción de monodosis de plástico en hostelería:** prensa española (mayo 2026) informa de que desde el **12 de agosto de 2026** bares y restaurantes deberán eliminar envases monodosis de plástico de consumo inmediato (salsas, mermeladas, miel). Fuente (prensa, no texto legal): https://www.elespanol.com/cocinillas/actualidad-gastronomica/20260515/oficial-bares-restaurantes-deberan-eliminar-envases-monodosis-salsas-mermeladas-leche/1003744243657_0.html ⚑ Verificar el texto legal exacto (marco: RD 1055/2022 de envases y el reglamento europeo de envases). **Impacto probable en EZTI: bajo** — un gel deportivo de venta retail no es una monodosis de condimento servida en HORECA — pero condiciona una eventual línea de venta a hostelería y conviene preguntar a los copackers por materiales/monomateriales reciclables.
+- **Responsabilidad ampliada del productor (RAP) de envases — RD 1055/2022:** quien pone en el mercado producto envasado (aunque sea pequeño) tiene obligaciones de inscripción en el Registro de Productores de Producto (sección envases) y de gestión vía un SCRAP (p. ej. Ecoembes) con declaración de envases. Fuente primaria: https://www.boe.es/eli/es/rd/2022/12/27/1055 ⚑ **Confirmar si EZTI ya está inscrita y al día** — es un incumplimiento frecuente y barato de subsanar en marcas pequeñas; confianza media sobre el detalle de umbrales: verificar con asesor.
+
 ## Checklist operativo (estado)
 
 - [ ] Clasificación del producto decidida con asesor (§0)
@@ -50,3 +55,4 @@ No hay un reglamento único: la fecha de duración mínima la fija el operador *
 - [ ] Ficha web auditada contra art. 14 (§1, §4)
 - [ ] Lista de claims permitidos/prohibidos para EZTI redactada y aprobada (§2)
 - [ ] Informe de estabilidad previsto en el contrato con copacker (§5)
+- [ ] Inscripción RAP de envases (RD 1055/2022) confirmada (§6)

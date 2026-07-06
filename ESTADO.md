@@ -1,27 +1,24 @@
-# ESTADO — 2026-07-06
+# ESTADO — 2026-07-06 (actualización 2)
 
 **Fase:** F0 (Fundación) en curso · **Pausa:** no · **Gasto real del mes:** 0 €
 
 ## Hecho hoy
 
-- Parche correctivo pre-F0 aplicado y registrado (ADR-002); ADR-001 adopta el operating model.
-- Estructura del repo de gobierno: `domains/` (4 playbooks con límites legales embebidos), `playbooks/` (roles + tablero), `knowledge/`, `decisions/`, `skills/`, `infra/`, `services/`.
-- Servicios deterministas escritos y verificados en CI local: gateway-telegram (intake, gates, kill switch), ledger (dos divisas, circuit breakers), watchdog (salud, disco, backups). **Test del kill switch: verde** (precondición 5 de ADR-002 cumplida en local).
-- `infra/bootstrap.sh` + `docker-compose.yml` + `runbook-vm.md` con las 5 precondiciones.
-- **EZTI Sprint 1 (parcial):** 12 copackers candidatos con fuente ([#1](https://github.com/lazpiurantxon-bot/kaikhermes/issues/1)); dossier de compliance alimentario v1; borradores de contacto ES/EN en espera de gate.
+- Parche correctivo pre-F0 (ADR-002) + ADR-001; estructura completa del repo de gobierno.
+- Servicios deterministas escritos y verificados en CI local; **test del kill switch en verde**.
+- `infra/`: bootstrap, compose y runbook de VM con las 5 precondiciones.
+- **Bot de Telegram creado por el propietario: @Tartaloagentbot** ([#3](https://github.com/lazpiurantxon-bot/kaikhermes/issues/3)). Token recibido (NO almacenado en el repo). Verificación `getMe` **bloqueada desde la sesión**: la política de red del entorno deniega `api.telegram.org` — se verifica al desplegar en la VM, o antes si el propietario permite el dominio en el entorno o verifica en local.
+- **EZTI Sprint 1 avanzado** ([#1](https://github.com/lazpiurantxon-bot/kaikhermes/issues/1)): 14 candidatos (v0.2), **6 priorizados** para primera oleada (Pouch Alliance, Sport Foods Labs, Monopacker, Allpack-Stick, Envasados a Terceros, MillMax); dossier de compliance ampliado con **hallazgo nuevo**: restricción de monodosis de plástico en HORECA (ago-2026, impacto probable bajo para EZTI) y obligación RAP de envases RD 1055/2022 (**confirmar inscripción de EZTI**).
 
 ## Esperando al propietario
 
-| Qué | Issue | Por qué solo él |
+| Qué | Issue | Detalle |
 |---|---|---|
-| Precondiciones de VM (snapshot probado, inventario, coste) | [#2](https://github.com/lazpiurantxon-bot/kaikhermes/issues/2) | Credenciales GCP (Tier-1 aún no expuestas) |
-| Bot de Telegram nuevo + chat ID | [#3](https://github.com/lazpiurantxon-bot/kaikhermes/issues/3) | Creación del secreto Tier-1 |
-| Verificaciones V1–V3 (ultracode, Fable 5, Vertex, Routines) | [#4](https://github.com/lazpiurantxon-bot/kaikhermes/issues/4) | Datos de su cuenta/plan |
+| Precondiciones de VM | [#2](https://github.com/lazpiurantxon-bot/kaikhermes/issues/2) | Snapshot probado, inventario, coste — requiere GCP |
+| Chat ID + vía de verificación del bot | [#3](https://github.com/lazpiurantxon-bot/kaikhermes/issues/3) | Enviar un mensaje a @Tartaloagentbot; decidir opción (a) dominio permitido, (b) verificación local, (c) al deploy. Recomendado: regenerar token en el deploy |
+| Verificaciones V1–V3 | [#4](https://github.com/lazpiurantxon-bot/kaikhermes/issues/4) | ultracode, límites Fable 5, Vertex, Routines |
+| **GO a la shortlist de 6** | [#1](https://github.com/lazpiurantxon-bot/kaikhermes/issues/1) | Con tu GO: verifico emails, personalizo los 6 borradores y te los entrego listos para enviar (envío = tuyo, R3) |
 
-## Gates pendientes
+## Próximo (sin dependencias)
 
-Ninguno formalizado todavía (los envíos a copackers se solicitarán como gates R3 individuales cuando el gateway esté desplegado; hasta entonces, por este canal).
-
-## Próximo (sin dependencias del propietario)
-
-Sprint 1 segunda pasada: barrido de envasadores de miel con línea monodosis + verificación de fichas + priorización de 5–6 candidatos.
+Verificación de fichas/emails de los 6 priorizados y personalización de borradores (queda listo para tu gate en cuanto confirmes la lista).

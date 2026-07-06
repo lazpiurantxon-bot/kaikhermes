@@ -26,6 +26,8 @@
 | Allpack-Stick | Envasador a terceros monodosis/stick alimentario | Envasado a terceros en stick/sachet para alimentación y dietéticos, sala blanca | http://www.allpackstick.es/envase-de-monodosis | media |
 | Monopacker | Envasador a terceros monodosis | Líneas automatizadas para líquidos, **gel**, salsas y cremas | https://www.monopacker.com/envasados-monodosis | media |
 | Sucrepack | Envasador monodosis desde 1970 | Especialista monodosis alimentario (histórico en azúcar/miel) | https://sucrepack.es/ | media |
+| Envasados a Terceros | Envasador a terceros alimentario | Monodosis y mini-doypack para alimentación; cita expresamente miel entre los productos | https://www.envasados.es/mini-doypack-un-nuevo-formato-de-envase/ | media |
+| Arna Apícola | Apícola con línea de monodosis de miel | Produce sobres monodosis de miel (13 g); **preguntar si hace maquila** para terceros | https://arnaapicola.es/producto/sobre-miel-en-monodosis-miel-13-gr/ | baja (maquila no confirmada) |
 
 Nota: los "laboratorios de suplementos" y los "envasadores alimentarios" son dos vías distintas — un gel de miel/limón/sal puede tratarse como **alimento** (no necesariamente como complemento alimenticio), lo que abre la vía del envasador alimentario clásico, a menudo con costes menores. Ver `normativa-alimentaria.md` §0 (clasificación) — decisión con flag de asesor.
 
@@ -39,14 +41,26 @@ Nota: los "laboratorios de suplementos" y los "envasadores alimentarios" son dos
 | Vitrition | Reino Unido | Geles en sachets sellados individuales | https://www.vituk.com/gels/ | media — **fricción Brexit** |
 | Unette | Reino Unido | Marca blanca de deportiva en sachet | https://www.unette.co.uk/white-label-solutions/sports-nutrition/ | media — **fricción Brexit** |
 
-## Próximos pasos (Sprint 1)
+## Priorización para primer contacto (v0.2, 2026-07-06)
 
-1. Verificar fichas (webs vivas, datos de contacto) y priorizar 5–6 para el primer contacto.
-2. Enviar los borradores de `domains/ezti/outreach/` **tras gate R3 individual** del propietario.
-3. Con las respuestas: completar tabla de scoring (MOQ, coste, certificaciones, plazos, muestras) y elevar memo de decisión con ≤3 finalistas.
+Propuesta de 6 para la primera oleada — mezcla deliberada de las dos vías (especialista en gel deportivo vs envasador alimentario) para comparar costes y MOQ reales:
+
+| # | Empresa | Vía | Motivo de prioridad |
+|---|---|---|---|
+| 1 | Pouch Alliance (NL) | Especialista gel | Especialización exacta en geles energéticos de marca privada; referencia de mercado para calibrar al resto |
+| 2 | Sport Foods Labs (ES) | Lab deportivo | Geles a terceros declarados, en España |
+| 3 | Monopacker (ES) | Envasador | Declara llenado de **gel** en monodosis automatizada |
+| 4 | Allpack-Stick (ES) | Envasador | Stick/sachet alimentario en sala blanca |
+| 5 | Envasados a Terceros (ES) | Envasador | Monodosis/mini-doypack alimentario, cita miel |
+| 6 | MillMax (UE) | Lab deportivo | Contraste de precio fuera de España, normas UE |
+
+Reserva (2ª oleada si la 1ª no cuaja): Barosa Labs, Fabricantes de Suplementos, Fabricantes de Complementos, Sucrepack, Arna Apícola (maquila por confirmar). UK (Calleva, Vitrition, Unette): solo si las vías UE fallan, por fricción Brexit.
+
+**Pendiente antes del envío:** verificar ficha y email de contacto de cada priorizado, y personalizar el borrador por empresa. El envío en sí = gate R3 individual del propietario, que además lo ejecuta él (el sistema no tiene capacidad de envío por diseño).
 
 ## Huecos declarados
 
 - Ningún dato real de MOQ/costes todavía (se obtiene contactando, no está publicado).
-- Falta un barrido específico de envasadores de **miel** con línea monodosis (p. ej. cooperativas apícolas con maquila) — segunda pasada del Sprint 1.
+- Emails de contacto de los 6 priorizados sin verificar todavía.
+- Maquila de Arna Apícola no confirmada.
 - No verificado si alguno acepta volúmenes de arranque muy pequeños (test de mercado <5k uds).
