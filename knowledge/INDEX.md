@@ -11,7 +11,9 @@ Regla: todo documento a ≤2 saltos de aquí. Todo hecho con fuente + fecha + co
 - `ezti/ayudas.md` — (pendiente) subvenciones con plazos
 
 ## Core
-- (pendiente) decisiones técnicas destiladas del propio sistema — las ADRs viven en [`../decisions/`](../decisions/)
+- [`core/infra-gcp-inventario.md`](core/infra-gcp-inventario.md) — inventario GCP (VMs, discos, coste ocioso)
+- [`core/agency-agents-hermes.md`](core/agency-agents-hermes.md) — hechos de integración con Hermes (config, plugins, external_dirs) + roster externo de especialistas (ADR-005)
+- (pendiente) más decisiones técnicas destiladas del propio sistema — las ADRs viven en [`../decisions/`](../decisions/)
 
 ## Música
 - (pendiente — bloqueado para acciones externas por E13; ver playbook del dominio)
