@@ -49,7 +49,7 @@ SIN_ACCION_EXTERNA = frozenset({
     "ledger",
 })
 
-GATE_RE = re.compile(r"gate|pol[ií]tica", re.IGNORECASE)
+GATE_RE = re.compile(r"\bgate\b|\bpol[ií]tica\b", re.IGNORECASE)
 
 SKILL_FILES = sorted(SKILLS_DIR.rglob("SKILL.md"))
 IDS = [p.parent.name for p in SKILL_FILES]
@@ -71,6 +71,18 @@ def parse_frontmatter(text):
 
 def test_hay_skills():
     assert len(SKILL_FILES) >= 19, "el catálogo canónico (13 semilla + 6 oficina) no está completo"
+
+
+def test_nombres_de_skill_unicos():
+    nombres = [p.parent.name for p in SKILL_FILES]
+    duplicados = sorted({n for n in nombres if nombres.count(n) > 1})
+    assert not duplicados, (
+        f"nombres de skill duplicados en el árbol: {duplicados} — el "
+        "identificador usado por la clasificación (basename del directorio) "
+        "es ambiguo entre subárboles distintos (p. ej. proposed/ vs semilla/); "
+        "renombra una de las dos antes de que la clasificación fail-closed "
+        "los confunda en un solo elemento de conjunto"
+    )
 
 
 def test_clasificacion_cubre_el_catalogo():

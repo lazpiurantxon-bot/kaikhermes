@@ -79,7 +79,42 @@ eventos en el panel.
 - [ ] El panel NO es alcanzable desde fuera de la VM (curl desde otra máquina falla);
       túnel SSH sí: `ssh -L 8787:127.0.0.1:8787 <vm>` → http://localhost:8787.
 
-## 6. (Opcional, post-B12) Consultores bajo demanda: `agency-agents-router`
+## 6. Acceso al panel desde fuera (VM en Google Cloud)
+
+El panel es superficie de mando (kill switch, gates): se trata como SSH, no
+como una web. **Nunca se abre el puerto 8787 en el firewall de GCP** — es
+HTTP plano con token; expuesto a Internet sería sniffable y fuerza-brutable.
+
+**Recomendado — Tailscale** (funciona desde cualquier red, incluido el móvil;
+sin tocar el firewall de GCP, solo tráfico saliente):
+
+```bash
+# En la VM:
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up            # login con tu cuenta (plan personal gratuito)
+sudo tailscale serve --bg https / http://127.0.0.1:8787
+# En tu portátil/móvil: app de Tailscale con la misma cuenta →
+#   https://hermes-core.<tu-tailnet>.ts.net   (TLS automático, solo tu tailnet)
+```
+
+El panel sigue escuchando solo en 127.0.0.1 (no se toca su config); Tailscale
+hace de proxy cifrado con identidad, y el token del panel queda como segunda
+capa. Instalar Tailscale = gasto 0 y reversible (`tailscale down` + uninstall).
+
+**Alternativa sin instalar nada — túnel SSH/IAP** (portátil sí, móvil mal):
+
+```bash
+gcloud compute ssh hermes-core --zone=europe-southwest1-a \
+  --tunnel-through-iap -- -L 8787:127.0.0.1:8787
+# → http://localhost:8787  (con IAP ni siquiera hace falta el 22 abierto al mundo:
+#   basta permitir 22 desde 35.235.240.0/20 en el firewall)
+```
+
+**Descartado:** exponer 8787 directo (aunque sea "con token"); Cloudflare
+Tunnel + Access es viable pero mete la mesa de mando detrás de un tercero y
+bajo un dominio público — si algún día se quiere, es decisión R2 con su gate.
+
+## 7. (Opcional, post-B12) Consultores bajo demanda: `agency-agents-router`
 
 ADR-005. ~280 especialistas-prompt (MIT) disponibles como plugin *lazy* de
 Hermes: 4 tools (`agency_agents_search/_inspect/_load/_delegate`) que buscan
@@ -117,4 +152,6 @@ de `plugins.enabled` en `~/.hermes/config.yaml`.
 `systemctl --user disable --now hermes-office-panel` + quitar
 `external_dirs`/symlinks de skills + `rm -rf ~/office/state` (el tablero es
 operativo, no institucional; lo institucional está en git). Hermes queda
-como estaba.
+como estaba. Si se instaló Tailscale: `tailscale down` + desinstalar. Si se
+instaló el router (§7): `rm -rf ~/.hermes/plugins/agency-agents-router` +
+quitar la línea de `plugins.enabled`.
