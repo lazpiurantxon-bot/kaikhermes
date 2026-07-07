@@ -1,6 +1,6 @@
-# ESTADO — 2026-07-06 (actualización 4 — PLANO MAESTRO)
+# ESTADO — 2026-07-07 (actualización 5 — F0.B EN CURSO)
 
-**Fase:** diseño completo cerrado; implementación pausada por decisión del propietario hasta nueva orden · **Pausa:** no · **Gasto real del mes:** 0 €
+**Fase:** F0.B en ejecución (el propietario levantó la pausa y está ejecutando el quickstart en la VM) · **Pausa:** no · **Gasto real del mes:** 0 €
 
 ## La dirección está fijada: `PLAN.md`
 
@@ -14,10 +14,12 @@ El propietario pidió parar la ejecución incremental y fijar la dirección comp
 - `comfy-models` borrado (~28 €/mes recuperados). `openclaw-core` se queda de momento (decisión propietario). `kaikuv1` intacto, sin clasificar.
 - Bot @Tartaloagentbot creado; token pendiente de regenerar en el deploy.
 
-## Punto exacto de pausa
+## Punto exacto de ejecución (F0.B — quickstart-f0.md)
 
-Siguiente paso físico cuando el propietario decida: **F0.B del PLAN** (instalar Hermes en `hermes-core`, comandos en `infra/quickstart-f0.md`). Nada más que decidir: el plan ya contiene las ramas para todas las incógnitas.
+- ✅ Paso 1 (herramientas base: curl, git) — 2026-07-07
+- ⏳ Paso 2 (instalar Hermes clean-room) — siguiente
+- Pendientes: Paso 3 (doctor) · Paso 4 (backends: Codex/Anthropic→V4/Vertex→V2) · Paso 5 (gateway Telegram, token por regenerar) · Paso 6 (validación, issue #5) · B7-B11 del PLAN (skills, cron, sandbox, kill switch)
 
-## Decisiones abiertas (solo estas — PLAN §10)
+## Decisiones abiertas (solo estas — PLAN §10; la #2 «ejecutar F0.B» ya está tomada: en curso)
 
-GO shortlist EZTI (#1) · ejecutar F0.B · nombre del sistema · datos música E13 · credenciales redes EZTI · asesor alimentario · clasificar kaikuv1 · borrar openclaw-core (F2) · caducidad créditos GCP · qué es "ultracode".
+GO shortlist EZTI (#1) · nombre del sistema · datos música E13 · credenciales redes EZTI · asesor alimentario · clasificar kaikuv1 · borrar openclaw-core (F2) · caducidad créditos GCP · qué es "ultracode".
