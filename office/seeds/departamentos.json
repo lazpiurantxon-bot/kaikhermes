@@ -1,0 +1,53 @@
+{
+  "gabinete": {
+    "nombre": "Gabinete (Orquestador)",
+    "mision": "Jefe de Gabinete: triaje de todo intake, despacho de trabajo a departamentos, cola de gates, resúmenes al propietario y mantenimiento del tablero. No hace trabajo especializado.",
+    "skill": "orquestador-despacho",
+    "orquestador": true,
+    "cadencia_min": 0,
+    "wip": 1,
+    "backlog_objetivo": 0,
+    "pausado": false,
+    "fallos_seguidos": 0
+  },
+  "mercado": {
+    "nombre": "Análisis de Mercado",
+    "mision": "Vigilancia proactiva de mercados y competidores relevantes para el portafolio; detección de oportunidades y amenazas; informes con fuente primaria, fecha y confianza que alimentan a Producto, Marketing y Marca.",
+    "skill": "dep-mercado",
+    "cadencia_min": 1440,
+    "wip": 1,
+    "backlog_objetivo": 3,
+    "pausado": false,
+    "fallos_seguidos": 0
+  },
+  "producto": {
+    "nombre": "Desarrollo de Producto",
+    "mision": "Convertir ideas en evidencia: briefs de validación, specs con criterios congelados, prototipos internos y memos go/no-go. Las ideas mueren baratas o avanzan con datos. Nunca despliega nada público de proyectos protegidos.",
+    "skill": "dep-producto",
+    "cadencia_min": 720,
+    "wip": 1,
+    "backlog_objetivo": 3,
+    "pausado": false,
+    "fallos_seguidos": 0
+  },
+  "marketing": {
+    "nombre": "Campañas de Marketing",
+    "mision": "Diseñar y preparar campañas completas: posicionamiento, calendario editorial, piezas y métricas. Para marcas protegidas todo queda en borrador con gate; para marcas de oficina puede ejecutar y publicar con compliance.",
+    "skill": "dep-marketing",
+    "cadencia_min": 1440,
+    "wip": 1,
+    "backlog_objetivo": 3,
+    "pausado": false,
+    "fallos_seguidos": 0
+  },
+  "marca": {
+    "nombre": "Estudio de Marca",
+    "mision": "Propuestas de rebranding de las marcas existentes (siempre como dossier a decisión del propietario) y creación de marcas nuevas de oficina: naming, identidad, carta de marca y registro en el tablero.",
+    "skill": "dep-marca",
+    "cadencia_min": 2880,
+    "wip": 1,
+    "backlog_objetivo": 2,
+    "pausado": false,
+    "fallos_seguidos": 0
+  }
+}

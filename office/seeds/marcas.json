@@ -1,0 +1,34 @@
+{
+  "ezti": {
+    "nombre": "EZTI (gel energético)",
+    "status": "protected",
+    "enforcement": "gate",
+    "notas": "Marca real con ventas. Publicar, desplegar o modificar en su nombre: SOLO con gate R2/R3 del propietario. Propuestas y borradores sí.",
+    "creada_por": "owner:seed",
+    "creada": "2026-07-07T00:00:00Z"
+  },
+  "musica": {
+    "nombre": "Proyecto musical",
+    "status": "protected",
+    "enforcement": "deny",
+    "notas": "Acta E: prohibido publicar, negociar, contactar o distribuir hasta resolver E13 (alias/contratos). Trabajo privado sí.",
+    "creada_por": "owner:seed",
+    "creada": "2026-07-07T00:00:00Z"
+  },
+  "hotel": {
+    "nombre": "Hotel (empleador)",
+    "status": "protected",
+    "enforcement": "deny",
+    "notas": "Acta E: el propietario es empleado. Sin ruta para ninguna acción externa; solo propuestas internas que presenta él.",
+    "creada_por": "owner:seed",
+    "creada": "2026-07-07T00:00:00Z"
+  },
+  "hermes-core": {
+    "nombre": "Hermes / el propio sistema",
+    "status": "protected",
+    "enforcement": "gate",
+    "notas": "La infraestructura y el repo de gobierno: cambios vía PR; producción con gate.",
+    "creada_por": "owner:seed",
+    "creada": "2026-07-07T00:00:00Z"
+  }
+}

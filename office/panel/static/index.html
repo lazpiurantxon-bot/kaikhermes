@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hermes · Oficina</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div id="login" class="modal hidden">
+  <div class="modal-box">
+    <h2>Hermes · Oficina</h2>
+    <p>Token del propietario (está en <code>~/.hermes-office/panel.yaml</code> de la VM):</p>
+    <input id="token-input" type="password" placeholder="token" autocomplete="off">
+    <button id="token-save" class="btn primary">Entrar</button>
+    <p id="login-error" class="error hidden">Token inválido.</p>
+  </div>
+</div>
+
+<header>
+  <div class="brand">HERMES <span>· oficina</span></div>
+  <div id="status-chips" class="chips"></div>
+  <div class="header-actions">
+    <button id="btn-pause" class="btn ghost" title="Pausa global: nada nuevo arranca">⏸ Pausar</button>
+    <button id="btn-kill" class="btn danger" title="Kill switch: PARA TODO">■ KILL</button>
+  </div>
+</header>
+
+<section class="intake">
+  <input id="intake-text" placeholder="Dile algo al orquestador — una idea, un encargo, una pregunta… él decide qué hacer con ello">
+  <select id="intake-prio" title="prioridad">
+    <option value="1">P1 urgente</option>
+    <option value="2">P2</option>
+    <option value="3" selected>P3 normal</option>
+    <option value="4">P4</option>
+    <option value="5">P5 baja</option>
+  </select>
+  <button id="intake-send" class="btn primary">→ Orquestador</button>
+</section>
+
+<nav id="tabs">
+  <button data-tab="panel" class="active">Panel</button>
+  <button data-tab="tareas">Tareas</button>
+  <button data-tab="gates">Gates <span id="gate-badge" class="badge hidden"></span></button>
+  <button data-tab="marcas">Marcas</button>
+  <button data-tab="actividad">Actividad</button>
+  <button data-tab="sistema">Sistema</button>
+</nav>
+
+<main>
+  <div id="tab-panel" class="tab"></div>
+  <div id="tab-tareas" class="tab hidden"></div>
+  <div id="tab-gates" class="tab hidden"></div>
+  <div id="tab-marcas" class="tab hidden"></div>
+  <div id="tab-actividad" class="tab hidden"></div>
+  <div id="tab-sistema" class="tab hidden"></div>
+</main>
+
+<aside id="drawer" class="hidden">
+  <div id="drawer-content"></div>
+</aside>
+<div id="drawer-backdrop" class="hidden"></div>
+
+<div id="toast" class="hidden"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

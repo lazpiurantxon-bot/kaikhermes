@@ -59,3 +59,22 @@
 - Hasta desplegado + monitorizado + alertas. Operar de cara a terceros reales: autorización específica por servicio.
 - Piloto técnico: Hermes/Mandi. Piloto de negocio: EZTI. Hotel y música secundarios. Arquitectura preparada para dominios futuros (p. ej. hogar, deportes).
 - Artefactos de esta fase en este repo/branch; en FASE 2, recomendación explícita y razonada sobre repo definitivo (no decidir por inercia).
+
+---
+
+## Enmienda E1 — Oficina autónoma de departamentos (2026-07-07)
+
+**Fuente:** instrucción directa del propietario en sesión (encargo de la oficina autónoma). **Registrada como enmienda datada según la regla de cabecera de este acta.** Diseño resultante: ADR-004 y `operating-model/10-oficina-autonoma.md`.
+
+Nueva autoridad delegada (amplía B; no toca C, E ni G):
+
+- **(h) Trabajo proactivo sin encargo.** Los departamentos de la oficina (análisis de mercado, desarrollo de producto, campañas de marketing, estudio de marca) generan y adelantan trabajo por iniciativa propia, con cadencias y límites WIP configurados. Todo queda registrado y es vetable retroactivamente.
+- **(i) Marcas nuevas de oficina.** La oficina puede **crear marcas nuevas** y **publicar/operar en su nombre de forma autónoma** (R1 con compliance embebido y registro visible), incluida la apertura de cuentas y web propias de esas marcas.
+
+Límites que esta enmienda **no** relaja (siguen a rajatabla):
+
+1. **Nada en nombre de las marcas/proyectos existentes del propietario** (EZTI, música, hotel, el propio sistema, y cualquier proyecto ya en desarrollo): publicar, desplegar o modificar en su nombre sigue siendo R2/R3 con gate — la oficina solo prepara propuestas y borradores. Música y hotel siguen **prohibidos** para toda acción externa (E, sin cambios).
+2. **Contacto con terceros reales:** gate R3 individual siempre, también bajo marcas de oficina (B/c, sin cambios).
+3. **Gasto:** límites de C sin cambios (≤20-30 €/tarea autónomo; recurrente → gate).
+4. **Separación de identidad:** una marca de oficina no se presenta públicamente como vinculada al propietario ni a sus marcas existentes; esa asociación es decisión R2 suya.
+5. La aplicación de estos límites es **determinista y fail-closed** (registro de marcas + `oficina politica check`); marca sin registrar = protegida.

@@ -1,23 +1,45 @@
-# ESTADO — 2026-07-06 (actualización 4 — PLANO MAESTRO)
+# ESTADO — 2026-07-07 (actualización 5 — OFICINA AUTÓNOMA)
 
-**Fase:** diseño completo cerrado; implementación pausada por decisión del propietario hasta nueva orden · **Pausa:** no · **Gasto real del mes:** 0 €
+**Fase:** diseño e implementación de la oficina autónoma completados (ADR-004); pendiente de despliegue en la VM · **Pausa:** no · **Gasto real del mes:** 0 €
 
-## La dirección está fijada: `PLAN.md`
+## Qué hay nuevo
 
-El propietario pidió parar la ejecución incremental y fijar la dirección completa. Hecho: **`PLAN.md` (raíz del repo) es el plano maestro** — arquitectura final, catálogo cerrado de 13 skills semilla (ya escritas en `skills/semilla/`), cron, backends con árboles de decisión pre-resueltos, secuencia F0.B→F3 con criterios de salida, operación en régimen, presupuesto y la lista cerrada de las 10 decisiones que quedan en manos del propietario.
+Por mandato del propietario, la oficina queda completada como **oficina
+autónoma de departamentos sobre Hermes Agent** (nada de scripts a medida como
+sustrato: la agencia corre en el daemon — skills + cron nativo + subagentes
+aislados):
 
-**Cómo retomar en cualquier sesión:** leer `PLAN.md` → este archivo → issue del paso activo.
+- **Orquestador** (agente raíz, `skills/oficina/orquestador-despacho`): todo
+  input del propietario pasa por él; tría, delega, despacha, lanza pulsos.
+- **4 departamentos proactivos** (subagentes aislados): `mercado`,
+  `producto`, `marketing`, `marca` — generan trabajo sin que nadie lo pida.
+- **Frontera de marcas** (enmienda E1 del acta, determinista y fail-closed):
+  marcas existentes (EZTI, música, hotel, hermes-core) = solo propuesta+gate
+  (o prohibido); **marcas nuevas de oficina = operación autónoma con
+  compliance**; terceros reales = R3 siempre.
+- **Tablero + CLI `oficina`** (`office/`, stdlib puro): estados, WIP,
+  breakers, gates, ledger, feed. **43 tests en verde.**
+- **Panel web del propietario** (`office/panel`, 127.0.0.1:8787 vía túnel
+  SSH): intake al orquestador, kanban, agentes en trabajo, gates
+  APRUEBO/RECHAZO, pausas/pulso por departamento, kill switch, marcas,
+  presupuesto, feed.
 
-## Hito de infraestructura (ya real)
+Documentos: `operating-model/10-oficina-autonoma.md` (diseño) ·
+`decisions/ADR-004` · enmienda E1 en `fase-1-respuestas.md` · PLAN v1.1.
 
-- VM **`hermes-core`** creada y corriendo (e2-small, Ubuntu 24.04, Madrid, 34.175.116.122). Limpia: aún sin Hermes.
-- `comfy-models` borrado (~28 €/mes recuperados). `openclaw-core` se queda de momento (decisión propietario). `kaikuv1` intacto, sin clasificar.
-- Bot @Tartaloagentbot creado; token pendiente de regenerar en el deploy.
+## Cómo retomar
 
-## Punto exacto de pausa
+Leer `PLAN.md` → este archivo → `operating-model/10-oficina-autonoma.md`.
 
-Siguiente paso físico cuando el propietario decida: **F0.B del PLAN** (instalar Hermes en `hermes-core`, comandos en `infra/quickstart-f0.md`). Nada más que decidir: el plan ya contiene las ramas para todas las incógnitas.
+## Punto exacto
 
-## Decisiones abiertas (solo estas — PLAN §10)
+Siguiente paso físico: **F0.B en la VM** (`infra/quickstart-f0.md`) y al
+llegar a B7/B12, desplegar la oficina: `bash office/deploy.sh` +
+`office/hermes/instalacion.md` (skills, prompt del raíz, cron de despacho;
+los [TBV] de la versión de Hermes se verifican ahí y se anotan en el issue #5).
 
-GO shortlist EZTI (#1) · ejecutar F0.B · nombre del sistema · datos música E13 · credenciales redes EZTI · asesor alimentario · clasificar kaikuv1 · borrar openclaw-core (F2) · caducidad créditos GCP · qué es "ultracode".
+## Decisiones abiertas (PLAN §10, sin cambios)
+
+GO shortlist EZTI (#1) · ejecutar F0.B · nombre del sistema · datos música
+E13 · credenciales redes EZTI · asesor alimentario · clasificar kaikuv1 ·
+borrar openclaw-core (F2) · caducidad créditos GCP · qué es "ultracode".

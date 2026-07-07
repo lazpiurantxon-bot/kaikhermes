@@ -44,4 +44,15 @@ Después: pasos manuales que imprime el propio bootstrap — instalación limpia
 
 ## 4. Verificación post-instalación
 
-La define el plan de validación de `operating-model/09-arquitectura-hermes.md` §8 (auth por suscripción, pairing DM + rechazo de terceros, command approval, kill switch del daemon, gobernanza de skills, cron, aislamiento de subagentes, visibilidad de gasto, sandbox Docker). Cada punto se registra con fecha en el issue #5. `hermes doctor` como diagnóstico general.
+La define el plan de validación de `operating-model/09-arquitectura-hermes.md` §8 (auth por suscripción, pairing DM + rechazo de terceros, command approval, kill switch del daemon, gobernanza de skills, cron, aislamiento de subagentes, visibilidad de gasto, sandbox Docker). Cada punto se registra con fecha en el issue #5. `hermes doctor` como diagnóstico general. **Añadido ADR-004:** los checks de la oficina de `office/hermes/instalacion.md` §5 (CLI en PATH de subagentes, despacho por cron, pulsos proactivos, exit codes de política, gates desde el panel, kill switch del tablero, panel no expuesto).
+
+## 5. Servicio del panel de la oficina (ADR-004)
+
+| Operación | Comando (usuario del daemon) |
+|---|---|
+| Desplegar/actualizar | `cd ~/office/kaikhermes && bash office/deploy.sh` (idempotente) |
+| Estado / logs | `systemctl --user status hermes-office-panel` · `journalctl --user -u hermes-office-panel -f` |
+| Parar / arrancar | `systemctl --user stop hermes-office-panel` / `…start…` (parar el panel NO para la oficina: la agencia vive en el daemon Hermes) |
+| Acceso | solo localhost; desde tu máquina `ssh -L 8787:127.0.0.1:8787 <vm>` → `http://localhost:8787`; token en `~/.hermes-office/panel.yaml` |
+| Backup del tablero | `~/office/state/` entra en el backup normal de la VM (`tar` basta; es estado operativo, lo institucional está en git) |
+| Rollback | `systemctl --user disable --now hermes-office-panel`; el tablero puede borrarse y resembrarse con `oficina init` |

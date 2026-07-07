@@ -1,0 +1,14 @@
+[Unit]
+Description=Hermes Office — panel del propietario (tablero de la oficina)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=__OFFICE_DIR__
+Environment=PANEL_CONFIG=%h/.hermes-office/panel.yaml
+ExecStart=%h/.hermes-office/venv/bin/python -m panel.main
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

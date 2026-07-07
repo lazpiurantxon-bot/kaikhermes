@@ -1,6 +1,8 @@
-# PLAN — Plano maestro del sistema (v1, 2026-07-06)
+# PLAN — Plano maestro del sistema (v1.1, 2026-07-07)
 
 **Qué es esto:** la dirección completa y cerrada del sistema, desde el estado actual hasta la oficina en régimen. Todas las decisiones están tomadas aquí (o delegadas a árboles de decisión pre-resueltos en §5). No hay que decidir "el siguiente paso" nunca: se ejecuta este plan en orden, y solo se vuelve a decidir si un criterio de salida falla.
+
+> **Enmienda v1.1 (2026-07-07, ADR-004 + enmienda E1 del acta):** por mandato del propietario, la oficina se completa como **oficina autónoma de departamentos** sobre Hermes Agent: orquestador (agente raíz, skill `orquestador-despacho`), 4 departamentos proactivos (`mercado`, `producto`, `marketing`, `marca` — subagentes aislados con pulsos por cron), tablero determinista + CLI `oficina` (`office/`), **panel web del propietario** y política de marcas fail-closed (marcas existentes: solo propuesta+gate; marcas nuevas de oficina: operación autónoma con compliance). Diseño: `operating-model/10-oficina-autonoma.md`. Al catálogo §3 se suman las 6 skills de `skills/oficina/` (mandato, no diseño especulativo). F0.B gana el paso **B12: desplegar la oficina** (`office/deploy.sh` + `office/hermes/instalacion.md`); su validación se añade al issue #5. Todo lo demás del plan sigue vigente.
 
 **Jerarquía documental:** este plan manda sobre el orden de ejecución; `operating-model/09` manda sobre la arquitectura; `operating-model/00-08` sobre gobernanza y dominios; el acta `fase-1-respuestas.md` sobre restricciones. Conflicto → gana el de más arriba en esta lista… salvo el acta, que gana siempre.
 

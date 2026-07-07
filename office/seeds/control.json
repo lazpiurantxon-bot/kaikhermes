@@ -1,0 +1,10 @@
+{
+  "pausa_global": false,
+  "kill": false,
+  "freeze_gasto": false,
+  "wip_global": 2,
+  "presupuesto_mes_eur": 100,
+  "limite_tarea_eur": 20,
+  "motivo": "",
+  "actualizado": "2026-07-07T00:00:00Z"
+}

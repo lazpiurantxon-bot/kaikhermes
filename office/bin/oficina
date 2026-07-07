@@ -1,0 +1,346 @@
+#!/usr/bin/env python3
+"""oficina — herramienta determinista del tablero de la oficina Hermes.
+
+La usan los subagentes de Hermes Agent (y el orquestador) para operar el
+tablero: tareas, gates, marcas, gasto, control. Aplica la política de marcas
+y los circuit breakers de forma determinista (doc 06 §4). Sin dependencias:
+stdlib de Python 3.10+.
+
+Códigos de salida:
+  0 = OK / política ALLOW
+  2 = error de uso o de protocolo del tablero
+  3 = política GATE (necesitas abrir gate y esperar al propietario)
+  4 = política DENY (no existe ruta: no lo intentes por otra vía)
+
+Actor: pásalo con --por (p. ej. --por dep-mercado). Reserva el prefijo
+'owner' para el propietario (panel / decisiones citadas).
+"""
+import argparse
+import json
+import os
+import shutil
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from core import policy  # noqa: E402
+from core.store import Store, StoreError  # noqa: E402
+
+SEEDS_DIR = Path(__file__).resolve().parents[1] / "seeds"
+
+
+def out(data, code=0):
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+    sys.exit(code)
+
+
+def fail(msg, code=2):
+    print(json.dumps({"error": msg}, ensure_ascii=False, indent=2))
+    sys.exit(code)
+
+
+def is_owner(por: str) -> bool:
+    return por.startswith("owner")
+
+
+def main():
+    p = argparse.ArgumentParser(prog="oficina", description=__doc__,
+                                formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--state", help="directorio de estado (default $OFICINA_STATE o ~/office/state)")
+    p.add_argument("--por", default=os.environ.get("OFICINA_ACTOR", "agente"),
+                   help="quién ejecuta (p. ej. gabinete, dep-mercado, owner:panel)")
+    # --state/--por se aceptan también DESPUÉS del subcomando (es como los
+    # escriben los agentes); SUPPRESS evita pisar el valor global con defaults.
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("--state", default=argparse.SUPPRESS)
+    common.add_argument("--por", default=argparse.SUPPRESS)
+
+    subparsers = p.add_subparsers(dest="cmd", required=True)
+    sub = type("Sub", (), {"add_parser": staticmethod(
+        lambda name, **kw: subparsers.add_parser(name, parents=[common], **kw))})
+
+    sp = sub.add_parser("init", help="sembrar el tablero (idempotente)")
+    sp.add_argument("--seeds", default=str(SEEDS_DIR))
+
+    sub.add_parser("estado", help="vista de 30 segundos del tablero")
+
+    sp = sub.add_parser("control", help="pausa global / kill switch / presupuesto")
+    sp.add_argument("accion", choices=["ver", "set"])
+    sp.add_argument("--pausa", choices=["on", "off"])
+    sp.add_argument("--kill", choices=["on", "off"])
+    sp.add_argument("--wip-global", type=int)
+    sp.add_argument("--presupuesto-mes", type=float)
+    sp.add_argument("--limite-tarea", type=float)
+    sp.add_argument("--motivo", default="")
+
+    sp = sub.add_parser("departamento", help="roster de departamentos")
+    sp.add_argument("accion", choices=["lista", "pausar", "reanudar", "set"])
+    sp.add_argument("slug", nargs="?")
+    sp.add_argument("--motivo", default="")
+    sp.add_argument("--cadencia", type=int)
+    sp.add_argument("--wip", type=int)
+    sp.add_argument("--backlog", type=int)
+
+    sp = sub.add_parser("pulso", help="pulsos proactivos de departamentos")
+    sp.add_argument("accion", choices=["pendientes", "hecho"])
+    sp.add_argument("slug", nargs="?")
+
+    sp = sub.add_parser("intake", help="registrar entrada del propietario")
+    sp.add_argument("accion", choices=["add"])
+    sp.add_argument("texto")
+    sp.add_argument("--origen", default="telegram", choices=["owner", "panel", "telegram"])
+
+    sp = sub.add_parser("tarea", help="ciclo de vida de tareas")
+    sp.add_argument("accion", choices=["crear", "lista", "ver", "asignar", "empezar",
+                                       "entregar", "fallar", "cerrar", "archivar",
+                                       "recolar", "responder", "nota", "artefacto", "editar"])
+    sp.add_argument("id", nargs="?")
+    sp.add_argument("--titulo")
+    sp.add_argument("--desc", default="")
+    sp.add_argument("--dept")
+    sp.add_argument("--estado")
+    sp.add_argument("--origen", default="agente")
+    sp.add_argument("--prioridad", type=int)
+    sp.add_argument("--riesgo")
+    sp.add_argument("--marca")
+    sp.add_argument("--padre")
+    sp.add_argument("--resultado")
+    sp.add_argument("--motivo", default="")
+    sp.add_argument("--texto")
+    sp.add_argument("--ref")
+    sp.add_argument("--tipo", default="doc")
+    sp.add_argument("--nota", default="")
+    sp.add_argument("--nacer-en", default="intake", choices=["intake", "queued"])
+
+    sp = sub.add_parser("politica", help="consultar la política ANTES de toda acción externa")
+    sp.add_argument("accion", choices=["check"])
+    sp.add_argument("--accion-externa", required=True, choices=policy.ACTIONS, dest="accion_ext")
+    sp.add_argument("--marca")
+    sp.add_argument("--importe", type=float)
+
+    sp = sub.add_parser("gate", help="gates R2/R3 (aprobación del propietario)")
+    sp.add_argument("accion", choices=["abrir", "lista", "ver", "decidir"])
+    sp.add_argument("id", nargs="?")
+    sp.add_argument("--tarea")
+    sp.add_argument("--riesgo", default="R2", choices=["R2", "R3"])
+    sp.add_argument("--tipo", default="other",
+                    choices=["publish", "contact", "spend", "deploy", "brand", "proposal", "other"])
+    sp.add_argument("--que")
+    sp.add_argument("--porque", default="")
+    sp.add_argument("--rollback")
+    sp.add_argument("--estado")
+    sp.add_argument("--decision", choices=["aprobado", "rechazado"])
+    sp.add_argument("--nota", default="")
+    sp.add_argument("--aprobacion", default="",
+                    help="cita literal de la decisión del propietario (Telegram)")
+
+    sp = sub.add_parser("marca", help="registro de marcas")
+    sp.add_argument("accion", choices=["lista", "crear"])
+    sp.add_argument("--slug")
+    sp.add_argument("--nombre")
+    sp.add_argument("--notas", default="")
+    sp.add_argument("--status", default="office", choices=["office", "protected"])
+    sp.add_argument("--enforcement", default="allow", choices=["allow", "gate", "deny"])
+
+    sp = sub.add_parser("gasto", help="ledger de € reales")
+    sp.add_argument("accion", choices=["add", "mes"])
+    sp.add_argument("--importe", type=float)
+    sp.add_argument("--tarea")
+    sp.add_argument("--nota", default="")
+
+    sp = sub.add_parser("evento", help="feed de actividad")
+    sp.add_argument("accion", choices=["log", "lista"])
+    sp.add_argument("--tipo", default="info")
+    sp.add_argument("--mensaje")
+    sp.add_argument("--ref")
+    sp.add_argument("--n", type=int, default=40)
+
+    a = p.parse_args()
+    store = Store(a.state)
+    por = a.por
+
+    try:
+        dispatch(a, store, por)
+    except StoreError as e:
+        fail(str(e))
+
+
+def dispatch(a, store: Store, por: str):
+    if a.cmd == "init":
+        seeds = Path(a.seeds)
+        for name in ("departamentos.json", "marcas.json", "control.json"):
+            dst = store.dir / name
+            src = seeds / name
+            if not dst.exists() and src.exists():
+                shutil.copy(src, dst)
+        store.event("sistema", f"Tablero inicializado por {por} en {store.dir}", actor=por)
+        out({"ok": True, "state": str(store.dir)})
+
+    if a.cmd == "estado":
+        snap = store.snapshot()
+        out({
+            "control": snap["control"],
+            "gasto_mes_eur": snap["gasto_mes_eur"],
+            "conteo_por_dept": snap["conteo_por_dept"],
+            "agentes_en_trabajo": snap["agentes_en_trabajo"],
+            "gates_pendientes": [{"id": g["id"], "riesgo": g["riesgo"], "que": g["que"]}
+                                 for g in snap["gates_pendientes"]],
+            "pulsos_pendientes": snap["pulsos_pendientes"],
+            "intake_sin_triar": [t["id"] for t in store.list_tasks(estado="intake")],
+        })
+
+    if a.cmd == "control":
+        if a.accion == "ver":
+            out(store.control())
+        flags = {}
+        if a.pausa:
+            if a.pausa == "off" and not is_owner(por):
+                fail("Reanudar la pausa global es solo del propietario (doc 06 §4).")
+            flags["pausa_global"] = a.pausa == "on"
+        if a.kill:
+            if a.kill == "off" and not is_owner(por):
+                fail("Rearmar el kill switch es solo del propietario (doc 06 §4).")
+            flags["kill"] = a.kill == "on"
+        for key, val in (("wip_global", a.wip_global),
+                         ("presupuesto_mes_eur", a.presupuesto_mes),
+                         ("limite_tarea_eur", a.limite_tarea)):
+            if val is not None:
+                if not is_owner(por):
+                    fail(f"Cambiar {key} es solo del propietario.")
+                flags[key] = val
+        if a.motivo:
+            flags["motivo"] = a.motivo
+        out(store.set_control(por, **flags))
+
+    if a.cmd == "departamento":
+        if a.accion == "lista":
+            out(store.departments())
+        if not a.slug:
+            fail("Falta el slug del departamento.")
+        if a.accion == "pausar":
+            out(store.update_department(a.slug, por, pausado=True,
+                                        pausado_motivo=a.motivo or "sin motivo"))
+        if a.accion == "reanudar":
+            if not is_owner(por):
+                fail("Reanudar un departamento es solo del propietario (breaker, doc 06 §4).")
+            out(store.update_department(a.slug, por, pausado=False, pausado_motivo="",
+                                        fallos_seguidos=0))
+        if a.accion == "set":
+            if not is_owner(por):
+                fail("Cadencia/WIP/backlog los ajusta el propietario.")
+            out(store.update_department(a.slug, por, cadencia_min=a.cadencia,
+                                        wip=a.wip, backlog_objetivo=a.backlog))
+
+    if a.cmd == "pulso":
+        if a.accion == "pendientes":
+            out(store.due_pulses())
+        if not a.slug:
+            fail("Falta el slug del departamento.")
+        store.mark_pulse(a.slug, por)
+        out({"ok": True, "slug": a.slug})
+
+    if a.cmd == "intake":
+        t = store.create_task(titulo=a.texto[:120], descripcion=a.texto,
+                              por=por, origen=a.origen, estado="intake")
+        out(t)
+
+    if a.cmd == "tarea":
+        acc = a.accion
+        if acc == "crear":
+            if not a.titulo:
+                fail("--titulo es obligatorio.")
+            store.assert_agent_writable() if not is_owner(por) else None
+            out(store.create_task(titulo=a.titulo, descripcion=a.desc, por=por,
+                                  origen=a.origen, estado=a.nacer_en, dept=a.dept,
+                                  prioridad=a.prioridad or 3, riesgo=a.riesgo or "R0",
+                                  marca=a.marca, padre=a.padre))
+        if acc == "lista":
+            out(store.list_tasks(estado=a.estado, dept=a.dept))
+        if not a.id:
+            fail("Falta el id de la tarea (T-xxxx).")
+        if acc == "ver":
+            out(store.get_task(a.id))
+        if acc == "asignar":
+            if not a.dept:
+                fail("--dept es obligatorio para asignar.")
+            out(store.assign_task(a.id, a.dept, por, prioridad=a.prioridad,
+                                  riesgo=a.riesgo, marca=a.marca))
+        if acc == "empezar":
+            out(store.start_task(a.id, agente=por))
+        if acc == "entregar":
+            if not a.resultado:
+                fail("--resultado es obligatorio: qué se entrega y dónde está.")
+            out(store.deliver_task(a.id, a.resultado, por))
+        if acc == "fallar":
+            out(store.fail_task(a.id, a.motivo or "sin motivo", por))
+        if acc == "cerrar":
+            out(store.close_task(a.id, por, resultado=a.resultado))
+        if acc == "archivar":
+            out(store.archive_task(a.id, a.motivo or "archivada", por))
+        if acc == "recolar":
+            out(store.requeue_task(a.id, por, a.motivo or "devuelta a cola"))
+        if acc == "responder":
+            if not a.resultado:
+                fail("--resultado es obligatorio (la respuesta).")
+            out(store.answer_intake(a.id, a.resultado, por))
+        if acc == "nota":
+            if not a.texto:
+                fail("--texto es obligatorio.")
+            out(store.add_note(a.id, a.texto, por))
+        if acc == "artefacto":
+            if not a.ref:
+                fail("--ref es obligatorio (ruta, URL o PR).")
+            out(store.add_artifact(a.id, a.ref, a.tipo, a.nota, por))
+        if acc == "editar":
+            out(store.update_task_fields(a.id, por, titulo=a.titulo or None,
+                                         descripcion=a.desc or None, prioridad=a.prioridad,
+                                         riesgo=a.riesgo, marca=a.marca, dept=a.dept))
+
+    if a.cmd == "politica":
+        v = store.check_action(a.accion_ext, marca=a.marca, importe=a.importe)
+        code = {"allow": 0, "gate": 3, "deny": 4}[v.decision]
+        out(v.as_dict(), code=code)
+
+    if a.cmd == "gate":
+        if a.accion == "lista":
+            out(store.list_gates(estado=a.estado))
+        if a.accion == "abrir":
+            if not (a.tarea and a.que and a.rollback):
+                fail("gate abrir requiere --tarea, --que y --rollback.")
+            out(store.open_gate(a.tarea, a.riesgo, a.tipo, a.que, a.porque, a.rollback, por))
+        if not a.id:
+            fail("Falta el id del gate (G-xxxx).")
+        if a.accion == "ver":
+            out(store.get_gate(a.id))
+        if a.accion == "decidir":
+            if not a.decision:
+                fail("--decision aprobado|rechazado es obligatorio.")
+            out(store.decide_gate(a.id, a.decision, por, nota=a.nota,
+                                  aprobacion_ref=a.aprobacion))
+
+    if a.cmd == "marca":
+        if a.accion == "lista":
+            out(store.brands())
+        if not (a.slug and a.nombre):
+            fail("marca crear requiere --slug y --nombre.")
+        out(store.create_brand(a.slug, a.nombre, por, status=a.status,
+                               enforcement=a.enforcement, notas=a.notas))
+
+    if a.cmd == "gasto":
+        if a.accion == "mes":
+            out({"mes": store.month_spend()})
+        if a.importe is None:
+            fail("--importe es obligatorio.")
+        out(store.add_spend(a.importe, por, tarea=a.tarea, nota=a.nota))
+
+    if a.cmd == "evento":
+        if a.accion == "lista":
+            out(store.events(limit=a.n))
+        if not a.mensaje:
+            fail("--mensaje es obligatorio.")
+        store.event(a.tipo, a.mensaje, ref=a.ref, actor=por)
+        out({"ok": True})
+
+
+if __name__ == "__main__":
+    main()
