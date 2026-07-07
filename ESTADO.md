@@ -1,4 +1,4 @@
-# ESTADO — 2026-07-07 (actualización 5 — OFICINA AUTÓNOMA)
+# ESTADO — 2026-07-07 (actualización 6 — ADR-005 agency-agents)
 
 **Fase:** diseño e implementación de la oficina autónoma completados (ADR-004); pendiente de despliegue en la VM · **Pausa:** no · **Gasto real del mes:** 0 €
 
@@ -26,6 +26,17 @@ aislados):
 
 Documentos: `operating-model/10-oficina-autonoma.md` (diseño) ·
 `decisions/ADR-004` · enmienda E1 en `fase-1-respuestas.md` · PLAN v1.1.
+
+**Act. 6 — adopción selectiva de agency-agents (ADR-005):** revisado el repo
+público msitarzewski/agency-agents por encargo del propietario. Se adopta lo
+útil real, nada más: (1) sus datos de integración con Hermes desatascan los
+[TBV] de `office/hermes/instalacion.md` §2 (destilado en
+`knowledge/core/agency-agents-hermes.md`); (2) lint determinista del
+catálogo de skills (`office/tests/test_skills.py` — la suite pasa de 43 a
+**74 tests en verde**; skill nueva sin clasificar acción-externa/gate rompe
+la suite); (3) su plugin router como paso **opcional** post-B12
+(instalacion.md §6, pineado). Rechazado: importar los ~280 agentes al
+catálogo (PLAN §3 sigue cerrado), runbooks NEXUS, app y convertidores.
 
 ## Cómo retomar
 
