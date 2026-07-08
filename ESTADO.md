@@ -14,12 +14,18 @@ El propietario pidió parar la ejecución incremental y fijar la dirección comp
 - `comfy-models` borrado (~28 €/mes recuperados). `openclaw-core` se queda de momento (decisión propietario). `kaikuv1` intacto, sin clasificar.
 - Bot @Tartaloagentbot creado; token pendiente de regenerar en el deploy.
 
-## Punto exacto de ejecución (F0.B — quickstart-f0.md)
+## Punto exacto de ejecución (F0.B — PLAN §6)
 
-- ✅ Paso 1 (herramientas base: curl, git) — 2026-07-07
-- ⏳ Paso 2 (instalar Hermes clean-room) — siguiente
-- Pendientes: Paso 3 (doctor) · Paso 4 (backends: Codex/Anthropic→V4/Vertex→V2) · Paso 5 (gateway Telegram, token por regenerar) · Paso 6 (validación, issue #5) · B7-B11 del PLAN (skills, cron, sandbox, kill switch)
+- ✅ B1, B2, B3 (base, `hermes doctor` OK, Codex OAuth) — hermes-agent (Nous Research), no NousResearch/hermes-agent genérico
+- ⚠️ B4 (Anthropic): backend añadido, pero como **API key de pago** (`hermes status` → API Keys, no Auth Providers) — Anthropic no parece ofrecer OAuth de suscripción en esta build de Hermes. **V4 pendiente de confirmar con el propietario**: si no fue intencional, aplica la rama NO de PLAN §5 (nivel 3 se escala a Claude Code vía repo, se retira la key de pago).
+- ✅ V2/Vertex resuelto como **NO** (decisión del propietario, 2026-07-08): política de organización GCP bloquea creación de llaves de service account (`constraints/iam.disableServiceAccountKeyCreation`); en vez de reasignar el SA de la VM, se aplaza Vertex — bulk se queda en Codex, no se contrata nada nuevo. SA `hermes-vertex` creado con rol `aiplatform.user` pero sin uso (sin llave); pendiente borrado de limpieza (opcional).
+- ✅ B6 confirmado por `hermes status`: gateway Telegram activo vía systemd (user).
+- ⏳ B7: repo clonado en `~/office/kaikhermes` (iba en rama equivocada, corrigiendo a `claude/agent-system-next-steps-63li8s`); instalación de las 13 skills semilla vía `hermes skills install <raw-URL-SKILL.md>` en curso.
+- ⏳ B8 (cron): `hermes cron create --help` pendiente para sintaxis exacta; scheduler nativo confirmado (`hermes cron {list,create,pause,resume,run,status,tick}`), 0 jobs creados aún.
+- ⏳ B9 (sandbox): `hermes status` → Terminal Backend: **local** (no Docker todavía); pendiente investigar si existe opción de backend Docker en `~/.hermes/config.yaml`.
+- ⏳ B10 (kill switch): mecanismo identificado (`hermes gateway {stop,start,restart,status}`), pendiente de probar.
+- ⏳ B11: checklist issue #5, pendiente de todo lo anterior.
 
-## Decisiones abiertas (solo estas — PLAN §10; la #2 «ejecutar F0.B» ya está tomada: en curso)
+## Decisiones abiertas (PLAN §10 + nuevas de la instalación real)
 
-GO shortlist EZTI (#1) · nombre del sistema · datos música E13 · credenciales redes EZTI · asesor alimentario · clasificar kaikuv1 · borrar openclaw-core (F2) · caducidad créditos GCP · qué es "ultracode".
+GO shortlist EZTI (#1) · nombre del sistema · datos música E13 · credenciales redes EZTI · asesor alimentario · clasificar kaikuv1 · borrar openclaw-core (F2) · caducidad créditos GCP · qué es "ultracode" · **nueva: ¿confirmar/revertir la API key de pago de Anthropic (V4)?**
