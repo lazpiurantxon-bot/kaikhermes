@@ -17,12 +17,12 @@ El propietario pidió parar la ejecución incremental y fijar la dirección comp
 ## Punto exacto de ejecución (F0.B — PLAN §6)
 
 - ✅ B1, B2, B3 (base, `hermes doctor` OK, Codex OAuth) — hermes-agent (Nous Research), no NousResearch/hermes-agent genérico
-- ⚠️ B4 (Anthropic): backend añadido, pero como **API key de pago** (`hermes status` → API Keys, no Auth Providers) — Anthropic no parece ofrecer OAuth de suscripción en esta build de Hermes. **V4 pendiente de confirmar con el propietario**: si no fue intencional, aplica la rama NO de PLAN §5 (nivel 3 se escala a Claude Code vía repo, se retira la key de pago).
+- ✅ B4 (Anthropic) y **V4 resuelto en SÍ**: la key visible en `hermes status` → API Keys es el token interno de validación de la sesión OAuth de tu plan Pro, no una clave de pago por token. Confirmado por el propietario 2026-07-09. Daemon usa Claude para nivel 3, sin coste incremental.
 - ✅ V2/Vertex resuelto como **NO** (decisión del propietario, 2026-07-08): política de organización GCP bloquea creación de llaves de service account (`constraints/iam.disableServiceAccountKeyCreation`); en vez de reasignar el SA de la VM, se aplaza Vertex — bulk se queda en Codex, no se contrata nada nuevo. SA `hermes-vertex` creado con rol `aiplatform.user` pero sin uso (sin llave); pendiente borrado de limpieza (opcional).
 - ✅ B6 confirmado por `hermes status`: gateway Telegram activo vía systemd (user).
 - ⏳ B7: repo clonado en `~/office/kaikhermes` (iba en rama equivocada, corrigiendo a `claude/agent-system-next-steps-63li8s`); instalación de las 13 skills semilla vía `hermes skills install <raw-URL-SKILL.md>` en curso.
-- ⏳ B8 (cron): `hermes cron create --help` pendiente para sintaxis exacta; scheduler nativo confirmado (`hermes cron {list,create,pause,resume,run,status,tick}`), 0 jobs creados aún.
-- ⏳ B9 (sandbox): `hermes status` → Terminal Backend: **local** (no Docker todavía); pendiente investigar si existe opción de backend Docker en `~/.hermes/config.yaml`.
+- ⏳ B8 (cron): sintaxis confirmada (`hermes cron create <schedule> <prompt> --name --skill --workdir --deliver`); 5 jobs de PLAN §4 preparados, pendiente de ejecutar en la VM (con `timedatectl` a Europe/Madrid antes).
+- ⏳ B9 (sandbox): `hermes status` → Terminal Backend: **local**; `config.yaml` tiene `docker_mount_cwd_to_workspace: false` (sugiere soporte Docker existente pero inactivo); pendiente contexto de la sección y `hermes config --help` para el comando exacto de activación.
 - ⏳ B10 (kill switch): mecanismo identificado (`hermes gateway {stop,start,restart,status}`), pendiente de probar.
 - ⏳ B11: checklist issue #5, pendiente de todo lo anterior.
 
