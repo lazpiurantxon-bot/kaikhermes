@@ -21,7 +21,7 @@ El propietario pidió parar la ejecución incremental y fijar la dirección comp
 - ✅ V2/Vertex resuelto como **NO** (decisión del propietario, 2026-07-08): política de organización GCP bloquea creación de llaves de service account (`constraints/iam.disableServiceAccountKeyCreation`); en vez de reasignar el SA de la VM, se aplaza Vertex — bulk se queda en Codex, no se contrata nada nuevo. SA `hermes-vertex` creado con rol `aiplatform.user` pero sin uso (sin llave); pendiente borrado de limpieza (opcional).
 - ✅ B6 confirmado por `hermes status`: gateway Telegram activo vía systemd (user).
 - ⏳ B7: repo clonado en `~/office/kaikhermes` (iba en rama equivocada, corrigiendo a `claude/agent-system-next-steps-63li8s`); instalación de las 13 skills semilla vía `hermes skills install <raw-URL-SKILL.md>` en curso.
-- ⏳ B8 (cron): sintaxis confirmada (`hermes cron create <schedule> <prompt> --name --skill --workdir --deliver`); 5 jobs de PLAN §4 preparados, pendiente de ejecutar en la VM (con `timedatectl` a Europe/Madrid antes).
+- ✅ B8 (cron) completado 2026-07-09: 5 jobs activos y verificados con `hermes cron list` (resumen-diario 08:00, ledger-diario 08:05, informe-semanal lunes 07:30, retro-semanal domingo 18:00, mantenimiento-mensual día 1 09:00), horarios ya en Europe/Madrid (+02:00) sin necesitar ajuste de timezone.
 - ⏳ B9 (sandbox): `hermes status` → Terminal Backend: **local**; `config.yaml` tiene `docker_mount_cwd_to_workspace: false` (sugiere soporte Docker existente pero inactivo); pendiente contexto de la sección y `hermes config --help` para el comando exacto de activación.
 - ⏳ B10 (kill switch): mecanismo identificado (`hermes gateway {stop,start,restart,status}`), pendiente de probar.
 - ⏳ B11: checklist issue #5, pendiente de todo lo anterior.
