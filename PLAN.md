@@ -107,6 +107,14 @@ Cada incógnita pendiente tiene su rama ya decidida — al verificar, se ejecuta
 | ¿Se puede gatear la auto-creación de skills? | Activar gate para skills con acción externa | Cuarentena semanal de la retro (skill 10) es el único control — ya diseñado |
 | V5: ¿métricas de uso nativas? | Usarlas; skill 11 solo agrega | Skill 11 registra manualmente por tarea |
 | ¿Aislamiento real de subagentes? | Subagentes con todos los roles | Subagentes solo R0; QA y trabajo sensible en el daemon raíz secuencial |
+
+**Resoluciones verificadas en la instalación real (hermes-core, 2026-07-09):**
+- **V4 → NO.** `api.anthropic.com` devuelve HTTP 400 "Third-party apps now draw from your extra usage, not your plan limits" — el plan Pro vía OAuth de terceros no cubre uso del daemon. Rama NO aplicada: nivel 3 se escala a Claude Code vía repo; no se financia "extra usage" sin pasar por revisión.
+- **V2 → NO (aplazado por decisión del propietario).** Política de organización GCP bloquea `iam.disableServiceAccountKeyCreation`; alternativa sin llave (reasignar SA de la VM + scope `cloud-platform`, con reinicio breve) existía pero se descartó a favor de aplazar. Bulk se queda en Codex.
+- **Command approval granular → NO.** Solo existe un prompt de aprobación de comandos peligrosos a nivel de terminal interactivo (bypasseado por `--yolo`); no aplica al daemon desatendido vía gateway. Rama NO aplicada: gates solo vía `jdg-gate` + sandbox Docker (B9) como contención; subagentes restringidos a R0 hasta F2.
+- **Gate de auto-creación de skills → NO.** `config.yaml` solo expone `skills.creation_nudge_interval` (recordatorio, no gate). Rama NO aplicada: cuarentena semanal de `retro-semanal` como único control.
+- **V5 → SÍ.** `hermes insights` da métricas nativas reales (tokens/modelo/plataforma/sesión). La skill `ledger` agrega sobre esto, no registra a mano.
+- **¿Aislamiento real de subagentes?** No verificado aún — pendiente de la primera delegación real de trabajo.
 | ¿`hermes` install falla / proyecto roto? | — | Plan B: clonar release fijada del repo oficial; Plan C (último recurso): reactivar `archive/pre-hermes-services/` como puente y reevaluar sustrato con ADR |
 
 ## 6. Secuencia completa de implementación
