@@ -23,7 +23,7 @@ El propietario pidió parar la ejecución incremental y fijar la dirección comp
 - ⏳ B7: repo clonado en `~/office/kaikhermes` (iba en rama equivocada, corrigiendo a `claude/agent-system-next-steps-63li8s`); instalación de las 13 skills semilla vía `hermes skills install <raw-URL-SKILL.md>` en curso.
 - ✅ B8 (cron) completado 2026-07-09: 5 jobs activos y verificados con `hermes cron list` (resumen-diario 08:00, ledger-diario 08:05, informe-semanal lunes 07:30, retro-semanal domingo 18:00, mantenimiento-mensual día 1 09:00), horarios ya en Europe/Madrid (+02:00) sin necesitar ajuste de timezone.
 - ⏳ B9 (sandbox): `hermes status` → Terminal Backend: **local**; `config.yaml` tiene `docker_mount_cwd_to_workspace: false` (sugiere soporte Docker existente pero inactivo); pendiente contexto de la sección y `hermes config --help` para el comando exacto de activación.
-- ⏳ B10 (kill switch): mecanismo identificado (`hermes gateway {stop,start,restart,status}`), pendiente de probar.
+- ✅ B10 (kill switch) completado 2026-07-09: `hermes gateway stop/start/restart` probado, incluido en caliente durante el incidente de V4 (restart tras corregir el modelo por defecto); daemon sano tras el arreglo.
 - ⏳ B11: checklist issue #5, pendiente de todo lo anterior.
 
 ## Decisiones abiertas (PLAN §10 + nuevas de la instalación real)
